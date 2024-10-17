@@ -1,29 +1,43 @@
-import escpos from 'escpos';
-import sharp from 'sharp';
-import fs from 'fs';
+import printer from 'printer'; // Upewnij się, że masz zainstalowaną tę bibliotekę
+import fs from 'fs'; // Użyj do odczytu pliku
+import path from 'path'; // Użyj do obsługi ścieżek
 
-const device = new escpos.USB(); 
+// Ścieżka do obrazu
+const imagePath = path.join(__dirname, 'img.png');
 
-const printer = new escpos.Printer(device);
+// Funkcja do drukowania obrazu
+function printImage(imagePath) {
+    // Sprawdź, czy drukarka jest dostępna
+    const printers = printer.getPrinters();
+    const printerName = 'EPSON TM-L90'; // Upewnij się, że ta nazwa pasuje do Twojej drukarki
 
-const imgPath = './img.png';
+    const foundPrinter = printers.find(p => p.name === printerName);
+    if (!foundPrinter) {
+        console.error('Drukarka nie została znaleziona.');
+        return;
+    }
 
-sharp(imgPath)
-  .resize(512)  
-  .toBuffer()
-  .then(data => {
+    // Odczytaj plik obrazu
+    fs.readFile(imagePath, (err, data) => {
+        if (err) {
+            console.error('Błąd odczytu pliku:', err);
+            return;
+        }
 
-    device.open(() => {
-
-      escpos.Image.load(data, (image) => {
-        printer
-          .align('ct')  
-          .image(image, 's8')  
-          .cut()  
-          .close();  
-      });
+        // Wydrukuj obraz
+        printer.printDirect({
+            data: data,
+            printer: printerName,
+            type: 'RAW', // Możesz spróbować 'PNG' w zależności od ustawień drukarki
+            success: function (jobID) {
+                console.log(`Zlecenie druku wysłane. ID zlecenia: ${jobID}`);
+            },
+            error: function (err) {
+                console.error('Błąd drukowania:', err);
+            }
+        });
     });
-  })
-  .catch(err => {
-    console.error("Błąd przetwarzania obrazu:", err);
-  });
+}
+
+// Wywołaj funkcję drukującą
+printImage(imagePath);

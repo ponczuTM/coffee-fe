@@ -35,4 +35,6 @@ if not printer_name:
 else:
     print(f"Znaleziono drukarkę: {printer_name}")
 
+    print_image('img2.png', printer_name)
     print_image('img.png', printer_name)
+    print_image('img2.png', printer_name)

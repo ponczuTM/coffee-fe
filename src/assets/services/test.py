@@ -38,3 +38,16 @@ else:
     print_image('img.png', printer_name)
 
     print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)
+    print_image('img2.png', printer_name)v

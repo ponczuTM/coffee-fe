@@ -62,7 +62,7 @@ const Game = ({ resetGame }) => {
   const handleSquareClick = (row, col) => {
     if (row === redSquare.row && col === redSquare.col) {
       setScore(score + 1);
-      if (score + 1 === 1) {
+      if (score + 1 === 10) {
         setGameOver(true);
         if (timeElapsed <= 10) {
           setMessage(
@@ -199,7 +199,8 @@ const Game = ({ resetGame }) => {
             <div>
               <button onClick={handleCoffeeClaim} style={{ marginTop: "50px" }}>
                 KLIKNIJ, ABY WYDRUKOWAĆ <br></br> KOD QR
-              </button><br/>
+              </button>
+              <br />
               <button
                 onClick={handleCoffeeReject}
                 style={{ marginTop: "50px" }}

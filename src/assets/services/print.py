@@ -32,7 +32,7 @@ def generate_qr_code(data):
     img.save(qr_image_path)
     return qr_image_path
 
-def print_image(image_path, printer_name, scale=1.5):
+def print_image(image_path, printer_name, scale=1.0):
     try:
         img = Image.open(image_path)
     except Exception as e:
@@ -136,6 +136,8 @@ else:
     qr_image_path, qr_code_id = create_single_use_qr()
     print_image('blank1.png', printer_name)
     print_image(qr_image_path, printer_name)
+    print_image('blank2.png', printer_name)
+    print_image('blank2.png', printer_name)
     print_image('blank2.png', printer_name)
 
     cut_paper(printer_name)  

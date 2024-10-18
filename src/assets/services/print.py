@@ -32,15 +32,15 @@ def generate_qr_code(data):
     img.save(qr_image_path)
     return qr_image_path
 
-def print_image(image_path, printer_name, scale=1.0):
+def print_image(image_path, printer_name):
     try:
         img = Image.open(image_path)
     except Exception as e:
         print(f"Nie udało się otworzyć obrazu: {e}")
         return
 
-    new_width = int(img.width * scale)
-    new_height = int(img.height * scale)
+    new_width = int(img.width)
+    new_height = int(img.height)
 
     # img = img.resize((new_width, new_height), Image.ANTIALIAS)
     img = img.resize((new_width, new_height), Image.LANCZOS)

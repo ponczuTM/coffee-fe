@@ -25,7 +25,7 @@
 }
 
 .square.red {
-  background-color: red;
+  background-color: rgb(99, 255, 99);
 }
 
 .timer,
@@ -90,7 +90,9 @@ button:hover {
 }
 
 .square.red {
-  background-color: red;
+  background-image: url("../assets/images/logo.png");
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .square.white {
@@ -107,7 +109,6 @@ button:hover {
 .no {
   background-color: rgb(106, 0, 0);
 }
-
 
 .simple-keyboard .hg-button {
   color: black !important;

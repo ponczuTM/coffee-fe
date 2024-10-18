@@ -13,9 +13,15 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 def setup_database():
     conn = sqlite3.connect('qr_codes.db')
     cursor = conn.cursor()
-    cursor.execute()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS qr_codes (
+            id TEXT PRIMARY KEY,
+            used INTEGER DEFAULT 0
+        )
+    ''')  # Zapytanie SQL do stworzenia tabeli
     conn.commit()
     conn.close()
+
 
 def generate_qr_code(data):
     qr = qrcode.QRCode(version=1, box_size=10, border=5)

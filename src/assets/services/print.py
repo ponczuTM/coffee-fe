@@ -23,7 +23,7 @@ def setup_database():
     conn.close()
 
 def generate_qr_code(data):
-    qr = qrcode.QRCode(version=1, box_size=20, border=5)  
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
     qr.add_data(data)  
     qr.make(fit=True)
 
@@ -39,28 +39,24 @@ def print_image(image_path, printer_name):
         print(f"Nie udało się otworzyć obrazu: {e}")
         return
 
-    new_width = int(img.width)
-    new_height = int(img.height)
-
-    # img = img.resize((new_width, new_height), Image.ANTIALIAS)
-    # img = img.resize((new_width, new_height), Image.LANCZOS)
-
     hdc = win32ui.CreateDC()
     hdc.CreatePrinterDC(printer_name)
 
     hdc.StartDoc(image_path)
     hdc.StartPage()
 
+    width, height = img.size
     dib = ImageWin.Dib(img)
-    x, y = -200, -10
-    dib.draw(hdc.GetHandleOutput(), (x, y, new_width, new_height))
+
+    x, y = 0, 0
+
+    dib.draw(hdc.GetHandleOutput(), (x, y, width, height))
 
     hdc.EndPage()
     hdc.EndDoc()
     hdc.DeleteDC()
 
     print(f"Obraz '{image_path}' został wydrukowany.")
-
 
 def send_to_firebase(coffee_number):
     firebase_url = "https://mroczkowski-well-default-rtdb.europe-west1.firebasedatabase.app/coffees.json"
@@ -107,23 +103,6 @@ def scan_qr_code(qr_code_id):
     conn.close()
     return False  
 
-def cut_paper(printer_name):
-    GS = '\x1D'
-    cut_command_full = GS + 'V' + '\x00'
-
-    hPrinter = win32print.OpenPrinter(printer_name)
-    try:
-        hJob = win32print.StartDocPrinter(hPrinter, 1, ("Cut Paper", None, "RAW"))
-        win32print.StartPagePrinter(hPrinter)
-        win32print.WritePrinter(hPrinter, cut_command_full.encode())
-        win32print.EndPagePrinter(hPrinter)
-        win32print.EndDocPrinter(hPrinter)
-    finally:
-        win32print.ClosePrinter(hPrinter)
-
-    print("Wysłano komendę do ucięcia papieru.")
-
-
 setup_database()
 
 printer_name = win32print.GetDefaultPrinter()
@@ -137,9 +116,6 @@ else:
     print_image('blank1.png', printer_name)
     print_image(qr_image_path, printer_name)
     print_image('blank2.png', printer_name)
-    print_image('blank2.png', printer_name)
-
-    cut_paper(printer_name)  
 
     scanned_id = qr_code_id  
     if scan_qr_code(scanned_id):

@@ -134,9 +134,9 @@ else:
     print(f"Znaleziono drukarkę: {printer_name}")
 
     qr_image_path, qr_code_id = create_single_use_qr()
-    print_image('blank2.png', printer_name)
+    print_image('blank.png', printer_name)
     print_image(qr_image_path, printer_name)
-    print_image('blank2.png', printer_name)
+    print_image('blank.png', printer_name)
 
     cut_paper(printer_name)  
 

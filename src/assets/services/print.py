@@ -32,12 +32,18 @@ def generate_qr_code(data):
     img.save(qr_image_path)
     return qr_image_path
 
-def print_image(image_path, printer_name):
+def print_image(image_path, printer_name, scale=1.5):
     try:
         img = Image.open(image_path)
     except Exception as e:
         print(f"Nie udało się otworzyć obrazu: {e}")
         return
+
+    new_width = int(img.width * scale)
+    new_height = int(img.height * scale)
+
+    # img = img.resize((new_width, new_height), Image.ANTIALIAS)
+    img = img.resize((new_width, new_height), Image.LANCZOS)
 
     hdc = win32ui.CreateDC()
     hdc.CreatePrinterDC(printer_name)
@@ -45,18 +51,16 @@ def print_image(image_path, printer_name):
     hdc.StartDoc(image_path)
     hdc.StartPage()
 
-    width, height = img.size
     dib = ImageWin.Dib(img)
-
     x, y = 0, 0
-
-    dib.draw(hdc.GetHandleOutput(), (x, y, width, height))
+    dib.draw(hdc.GetHandleOutput(), (x, y, new_width, new_height))
 
     hdc.EndPage()
     hdc.EndDoc()
     hdc.DeleteDC()
 
     print(f"Obraz '{image_path}' został wydrukowany.")
+
 
 def send_to_firebase(coffee_number):
     firebase_url = "https://mroczkowski-well-default-rtdb.europe-west1.firebasedatabase.app/coffees.json"
@@ -104,23 +108,21 @@ def scan_qr_code(qr_code_id):
     return False  
 
 def cut_paper(printer_name):
-    hdc = win32ui.CreateDC()
-    hdc.CreatePrinterDC(printer_name)
-
     GS = '\x1D'
+    cut_command_full = GS + 'V' + '\x00'
 
-    cut_command = GS + 'V' + '\x42' + '\x00'
-
-    hdc.StartDoc("Cut Paper")
-    hdc.StartPage()
-
-    hdc.GetHandleOutput().Write(cut_command.encode())
-
-    hdc.EndPage()
-    hdc.EndDoc()
-    hdc.DeleteDC()
+    hPrinter = win32print.OpenPrinter(printer_name)
+    try:
+        hJob = win32print.StartDocPrinter(hPrinter, 1, ("Cut Paper", None, "RAW"))
+        win32print.StartPagePrinter(hPrinter)
+        win32print.WritePrinter(hPrinter, cut_command_full.encode())
+        win32print.EndPagePrinter(hPrinter)
+        win32print.EndDocPrinter(hPrinter)
+    finally:
+        win32print.ClosePrinter(hPrinter)
 
     print("Wysłano komendę do ucięcia papieru.")
+
 
 setup_database()
 

@@ -21,12 +21,15 @@ const StartScreen = ({ startGame }) => {
         Your browser does not support the video tag.
       </video>
       <div className="start-text">
-        <div style={{ marginTop: "-100px" }} className="text">
+        <div style={{ marginTop: "0px" }} className="text">
           Hej!
         </div>
-        <div style={{ marginTop: "10px" }}>Chcesz darmową</div>
-        <div style={{ marginTop: "10px" }}>Kawę ☕?</div>
-        <div style={{ marginTop: "250px" }}>DOTKNIJ ABY</div>
+        <div style={{ marginTop: "10px" }}>Chcesz</div>
+        <div style={{ marginTop: "10px" }}>darmową</div>
+        <div style={{ marginTop: "10px" }}>KAWĘ?</div>
+        <div style={{ marginTop: "10px" }}>☕</div>
+        <div style={{ marginTop: "180px" }}>DOTKNIJ</div>
+        <div style={{ marginTop: "10px" }}>ABY</div>
         <div style={{ marginTop: "20px" }}>ROZPOCZĄĆ</div>
       </div>
     </div>

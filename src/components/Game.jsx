@@ -14,6 +14,7 @@ const Game = ({ resetGame }) => {
   const [isCoffeeClaimed, setIsCoffeeClaimed] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const [isCountdownActive, setIsCountdownActive] = useState(true);
+  const [isPrinting, setIsPrinting] = useState(false); // Dodajemy nowy stan
 
   useEffect(() => {
     const generateGrid = () => {
@@ -61,7 +62,7 @@ const Game = ({ resetGame }) => {
   const handleSquareClick = (row, col) => {
     if (row === redSquare.row && col === redSquare.col) {
       setScore(score + 1);
-      if (score + 1 === 10) {
+      if (score + 1 === 1) {
         setGameOver(true);
         if (timeElapsed <= 10) {
           setMessage(
@@ -87,6 +88,15 @@ const Game = ({ resetGame }) => {
               {`osiągnij czas do 10s,`}
               <br />
               {`aby wygrać kawę.`}
+              <br />
+              <br />
+              <button
+                onClick={handleCoffeeReject}
+                style={{ marginTop: "50px" }}
+                className="no"
+              >
+                Spróbuj ponownie
+              </button>
             </>
           );
           setTimeout(() => {
@@ -102,6 +112,7 @@ const Game = ({ resetGame }) => {
 
   const handleCoffeeClaim = () => {
     setIsCoffeeClaimed(true);
+    setIsPrinting(true); // Ustawiamy stan na wyświetlenie komunikatu "POCZEKAJ NA WYDRUK"
 
     fetch("http://localhost:5000/api/claim-coffee", {
       method: "POST",
@@ -119,6 +130,15 @@ const Game = ({ resetGame }) => {
       .catch((error) => {
         console.error("Błąd podczas komunikacji z serwisem:", error);
       });
+
+    // Resetuj grę po 5 sekundach
+    setTimeout(() => {
+      setIsPrinting(false); // Przywracamy stan
+      resetGame(); // Resetujemy grę
+    }, 5000);
+  };
+
+  const handleCoffeeReject = () => {
     resetGame();
   };
 
@@ -132,7 +152,30 @@ const Game = ({ resetGame }) => {
 
   return (
     <div className="game-container">
-      {isCountdownActive ? (
+      {isPrinting ? (
+        <div
+          className="printing-message"
+          style={{
+            fontSize: "4rem",
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "white",
+            backgroundColor: "#693300",
+            textAlign: "center",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: 1000,
+          }}
+        >
+          POCZEKAJ
+          <br />
+          NA WYDRUK
+        </div>
+      ) : isCountdownActive ? (
         <div
           className="countdown"
           style={{
@@ -157,6 +200,13 @@ const Game = ({ resetGame }) => {
             <div>
               <button onClick={handleCoffeeClaim} style={{ marginTop: "50px" }}>
                 KLIKNIJ, ABY WYDRUKOWAĆ <br></br> KOD QR
+              </button><br/>
+              <button
+                onClick={handleCoffeeReject}
+                style={{ marginTop: "50px" }}
+                className="no"
+              >
+                Nie chcę kawy
               </button>
             </div>
           )}

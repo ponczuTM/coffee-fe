@@ -52,7 +52,7 @@ def print_image(image_path, printer_name):
     hdc.StartPage()
 
     dib = ImageWin.Dib(img)
-    x, y = 0, 0
+    x, y = 0, -10
     dib.draw(hdc.GetHandleOutput(), (x, y, new_width, new_height))
 
     hdc.EndPage()

@@ -39,7 +39,7 @@ def generate_qr_code(data):
 
     img = qr.make_image(fill='black', back_color='white')
     
-    new_size = (int(img.size[0] * 1.2), int(img.size[1] * 1.2))
+    new_size = (int(img.size[0] * 1.2), int(img.size[1] * 2))
     img = img.resize(new_size, Image.NEAREST)
 
     qr_image_path = 'qr_code.png'

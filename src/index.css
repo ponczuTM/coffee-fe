@@ -12,4 +12,5 @@
 body {
   font-family: "McFont", sans-serif;
   background-color: red;
+  overflow: hidden;
 }

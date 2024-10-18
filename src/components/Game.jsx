@@ -12,8 +12,8 @@ const Game = ({ resetGame }) => {
   const [gameOver, setGameOver] = useState(false);
   const [message, setMessage] = useState("");
   const [isCoffeeClaimed, setIsCoffeeClaimed] = useState(false);
-  const [countdown, setCountdown] = useState(3); // Dodajemy stan odliczania
-  const [isCountdownActive, setIsCountdownActive] = useState(true); // Czy odliczanie trwa
+  const [countdown, setCountdown] = useState(3);
+  const [isCountdownActive, setIsCountdownActive] = useState(true);
 
   useEffect(() => {
     const generateGrid = () => {
@@ -33,12 +33,12 @@ const Game = ({ resetGame }) => {
       if (countdown > 0) {
         const countdownInterval = setInterval(() => {
           setCountdown((prevCountdown) => prevCountdown - 1);
-        }, 1000);
+        }, 2000);
 
         return () => clearInterval(countdownInterval);
       } else {
         setIsCountdownActive(false);
-        setStartTime(Date.now()); // Zaczynamy grę po zakończeniu odliczania
+        setStartTime(Date.now());
       }
     }
   }, [countdown, isCountdownActive]);
@@ -122,6 +122,12 @@ const Game = ({ resetGame }) => {
     resetGame();
   };
 
+  const countdownMessages = [
+    "Kliknij logo EXON 10 razy",
+    "Masz na to 10 sekund",
+    "POWODZENIA!",
+  ];
+
   const countdownBackgroundColors = ["#470500", "#464700", "#014700"];
 
   return (
@@ -130,7 +136,7 @@ const Game = ({ resetGame }) => {
         <div
           className="countdown"
           style={{
-            fontSize: "10rem",
+            fontSize: "4rem",
             width: "100vw",
             height: "110vh",
             marginTop: "-30px",
@@ -139,9 +145,10 @@ const Game = ({ resetGame }) => {
             alignItems: "center",
             color: "white",
             backgroundColor: countdownBackgroundColors[countdown - 1],
+            textAlign: "center",
           }}
         >
-          {countdown}
+          {countdownMessages[3 - countdown]}
         </div>
       ) : gameOver ? (
         <div className="game-over">

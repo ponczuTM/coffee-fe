@@ -1,25 +1,32 @@
+# pip install firebase-admin
+
 import win32print
 import win32ui
 from PIL import Image, ImageWin
 import qrcode
 import random
+import json
 import sqlite3
 import sys
 import io
-import requests  
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def setup_database():
     conn = sqlite3.connect('qr_codes.db')
     cursor = conn.cursor()
-    cursor.execute()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS qr_codes (
+            id TEXT PRIMARY KEY,
+            used INTEGER DEFAULT 0
+        )
+    ''')
     conn.commit()
     conn.close()
 
 def generate_qr_code(data):
     qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(data)  
+    qr.add_data(data)
     qr.make(fit=True)
 
     img = qr.make_image(fill='black', back_color='white')
@@ -53,22 +60,13 @@ def print_image(image_path, printer_name):
 
     print(f"Obraz '{image_path}' został wydrukowany.")
 
-def send_to_firebase(coffee_number):
-    firebase_url = "https://mroczkowski-well-default-rtdb.europe-west1.firebasedatabase.app/coffees.json"
-
-    data = {
-        "coffee": coffee_number
-    }
-
-    response = requests.post(firebase_url, json=data)
-
-    if response.status_code == 200:
-        print(f"ID '{coffee_number}' zostało wysłane do Firebase.")
-    else:
-        print(f"Nie udało się wysłać danych do Firebase. Status: {response.status_code}")
-
 def create_single_use_qr():
     random_id = str(random.randint(100000, 999999))  
+    data = {
+        "id": random_id,
+        "coffee": True
+    }
+    json_data = json.dumps(data)
 
     conn = sqlite3.connect('qr_codes.db')
     cursor = conn.cursor()
@@ -76,8 +74,7 @@ def create_single_use_qr():
     conn.commit()
     conn.close()
 
-    qr_image_path = generate_qr_code(random_id)  
-    send_to_firebase(random_id)  
+    qr_image_path = generate_qr_code(json_data)
     return qr_image_path, random_id
 
 def scan_qr_code(qr_code_id):
@@ -89,6 +86,7 @@ def scan_qr_code(qr_code_id):
 
     if result is not None:
         if result[0] == 0:  
+
             cursor.execute('UPDATE qr_codes SET used = 1 WHERE id = ?', (qr_code_id,))
             conn.commit()
             conn.close()

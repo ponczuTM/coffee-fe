@@ -94,8 +94,8 @@ button:hover {
 }
 
 .square.white {
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: #484848;
+  border: 1px solid blue;
 }
 
 .timer,
@@ -107,6 +107,7 @@ button:hover {
 .no {
   background-color: rgb(106, 0, 0);
 }
+
 
 .simple-keyboard .hg-button {
   color: black !important;

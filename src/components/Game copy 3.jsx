@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Game.css";
+import Keyboard from "react-simple-keyboard";
+import "react-simple-keyboard/build/css/index.css";
+import { database, ref, set } from "../../firebase";
 
 const GRID_SIZE = 10;
 
@@ -12,8 +15,9 @@ const Game = ({ resetGame }) => {
   const [gameOver, setGameOver] = useState(false);
   const [message, setMessage] = useState("");
   const [isCoffeeClaimed, setIsCoffeeClaimed] = useState(false);
-  const [countdown, setCountdown] = useState(3); // Dodajemy stan odliczania
-  const [isCountdownActive, setIsCountdownActive] = useState(true); // Czy odliczanie trwa
+  const [showInputField, setShowInputField] = useState(false);
+  const [nickname, setNickname] = useState("");
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
     const generateGrid = () => {
@@ -26,31 +30,17 @@ const Game = ({ resetGame }) => {
 
     setGrid(generateGrid());
     randomizeRedSquare();
+    setStartTime(Date.now());
   }, []);
 
   useEffect(() => {
-    if (isCountdownActive) {
-      if (countdown > 0) {
-        const countdownInterval = setInterval(() => {
-          setCountdown((prevCountdown) => prevCountdown - 1);
-        }, 1000);
-
-        return () => clearInterval(countdownInterval);
-      } else {
-        setIsCountdownActive(false);
-        setStartTime(Date.now()); // Zaczynamy grę po zakończeniu odliczania
-      }
-    }
-  }, [countdown, isCountdownActive]);
-
-  useEffect(() => {
-    if (startTime && !gameOver && !isCountdownActive) {
+    if (startTime && !gameOver) {
       const interval = setInterval(() => {
         setTimeElapsed(((Date.now() - startTime) / 1000).toFixed(2));
       }, 100);
       return () => clearInterval(interval);
     }
-  }, [startTime, gameOver, isCountdownActive]);
+  }, [startTime, gameOver]);
 
   const randomizeRedSquare = () => {
     const row = Math.floor(Math.random() * GRID_SIZE);
@@ -61,7 +51,7 @@ const Game = ({ resetGame }) => {
   const handleSquareClick = (row, col) => {
     if (row === redSquare.row && col === redSquare.col) {
       setScore(score + 1);
-      if (score + 1 === 10) {
+      if (score + 1 === 1) {
         setGameOver(true);
         if (timeElapsed <= 10) {
           setMessage(
@@ -73,7 +63,10 @@ const Game = ({ resetGame }) => {
               <br />
               {`Wygrałeś kawę!`}
               <br />
-              {`POKAŻ KOD QR W SALI KONFERENCYJNEJ.`}
+              <br />
+              {`Odbierz ją w sali konferencyjnej!`}
+              <br />
+              <br />
             </>
           );
         } else {
@@ -102,56 +95,61 @@ const Game = ({ resetGame }) => {
 
   const handleCoffeeClaim = () => {
     setIsCoffeeClaimed(true);
+    setShowInputField(true); 
+    setKeyboardVisible(true); 
+  };
 
-    fetch("http://localhost:5000/api/claim-coffee", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log("Serwis wykonał skrypt Pythona");
-        } else {
-          console.error(`Wystąpił problem z serwisem: ${response.statusText}`);
-        }
-      })
-      .catch((error) => {
-        console.error("Błąd podczas komunikacji z serwisem:", error);
-      });
+  const handleCoffeeRefuse = () => {
     resetGame();
   };
 
-  const countdownBackgroundColors = ["#470500", "#464700", "#014700"];
+  const handleNicknameChange = (value) => {
+    setNickname(value);
+  };
+
+  const handleSaveNickname = () => {
+    resetGame();
+    setShowInputField(false); 
+    setKeyboardVisible(false); 
+  };
 
   return (
     <div className="game-container">
-      {isCountdownActive ? (
-        <div
-          className="countdown"
-          style={{
-            fontSize: "10rem",
-            width: "100vw",
-            height: "110vh",
-            marginTop: "-30px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "white",
-            backgroundColor: countdownBackgroundColors[countdown - 1],
-          }}
-        >
-          {countdown}
-        </div>
-      ) : gameOver ? (
+      {gameOver ? (
         <div className="game-over">
           {message}
           {timeElapsed <= 10 && !isCoffeeClaimed && (
             <div>
-              <button onClick={handleCoffeeClaim} style={{ marginTop: "50px" }}>
-                KLIKNIJ, ABY WYDRUKOWAĆ <br></br> KOD QR
+              <button onClick={() => handleCoffeeClaim()}>
+                ODBIERZ KAWĘ ZA POMOCĄ KODU QR
+              </button>
+
+              <button className="no" onClick={() => handleCoffeeRefuse()}>
+                NIE CHCĘ KAWY
               </button>
             </div>
+          )}
+
+          {}
+          {showInputField && (
+            <div className="input-container">
+              <input
+                type="text"
+                value={nickname}
+                placeholder="Wpisz imię lub nick"
+                onFocus={() => setKeyboardVisible(true)}
+                onChange={(e) => handleNicknameChange(e.target.value)}
+              />
+              <button onClick={handleSaveNickname}>Zapisz</button>
+            </div>
+          )}
+
+          {}
+          {keyboardVisible && (
+            <Keyboard
+              onChange={(input) => handleNicknameChange(input)}
+              layoutName="default"
+            />
           )}
         </div>
       ) : (

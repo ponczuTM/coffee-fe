@@ -14,7 +14,7 @@ const Game = ({ resetGame }) => {
   const [isCoffeeClaimed, setIsCoffeeClaimed] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const [isCountdownActive, setIsCountdownActive] = useState(true);
-  const [isPrinting, setIsPrinting] = useState(false); // Dodajemy nowy stan
+  const [isPrinting, setIsPrinting] = useState(false);
 
   useEffect(() => {
     const generateGrid = () => {
@@ -112,7 +112,7 @@ const Game = ({ resetGame }) => {
 
   const handleCoffeeClaim = () => {
     setIsCoffeeClaimed(true);
-    setIsPrinting(true); // Ustawiamy stan na wyświetlenie komunikatu "POCZEKAJ NA WYDRUK"
+    setIsPrinting(true);
 
     fetch("http://localhost:5000/api/claim-coffee", {
       method: "POST",
@@ -131,10 +131,9 @@ const Game = ({ resetGame }) => {
         console.error("Błąd podczas komunikacji z serwisem:", error);
       });
 
-    // Resetuj grę po 5 sekundach
     setTimeout(() => {
-      setIsPrinting(false); // Przywracamy stan
-      resetGame(); // Resetujemy grę
+      setIsPrinting(false);
+      resetGame();
     }, 5000);
   };
 

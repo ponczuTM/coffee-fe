@@ -58,6 +58,23 @@ def print_image(image_path, printer_name):
 
     print(f"Obraz '{image_path}' został wydrukowany.")
 
+def cut_paper(printer_name):
+    GS = '\x1D'
+    cut_command_full = GS + 'V' + '\x00'
+
+    hPrinter = win32print.OpenPrinter(printer_name)
+    try:
+        hJob = win32print.StartDocPrinter(hPrinter, 1, ("Cut Paper", None, "RAW"))
+        win32print.StartPagePrinter(hPrinter)
+        win32print.WritePrinter(hPrinter, cut_command_full.encode())
+        win32print.EndPagePrinter(hPrinter)
+        win32print.EndDocPrinter(hPrinter)
+    finally:
+        win32print.ClosePrinter(hPrinter)
+
+    print("Wysłano komendę do ucięcia papieru.")
+
+
 def send_to_firebase(coffee_number):
     firebase_url = "https://mroczkowski-well-default-rtdb.europe-west1.firebasedatabase.app/coffees.json"
 
@@ -116,7 +133,7 @@ else:
     print_image('blank1.png', printer_name)
     print_image(qr_image_path, printer_name)
     print_image('blank2.png', printer_name)
-
+    cut_paper(printer_name)
     scanned_id = qr_code_id  
     if scan_qr_code(scanned_id):
         print(f"QR kod '{scanned_id}' został zeskanowany i jest ważny.")

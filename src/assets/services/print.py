@@ -18,13 +18,12 @@ def setup_database():
             id TEXT PRIMARY KEY,
             used INTEGER DEFAULT 0
         )
-    ''')  # Zapytanie SQL do stworzenia tabeli
+    ''')
     conn.commit()
     conn.close()
 
-
 def generate_qr_code(data):
-    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr = qrcode.QRCode(version=1, box_size=20, border=5)  
     qr.add_data(data)  
     qr.make(fit=True)
 
@@ -87,7 +86,6 @@ def create_single_use_qr():
     return qr_image_path, random_id
 
 def scan_qr_code(qr_code_id):
-    """Sprawdza, czy QR kod został już zeskanowany."""
     conn = sqlite3.connect('qr_codes.db')
     cursor = conn.cursor()
     cursor.execute('SELECT used FROM qr_codes WHERE id = ?', (qr_code_id,))
@@ -105,6 +103,25 @@ def scan_qr_code(qr_code_id):
     conn.close()
     return False  
 
+def cut_paper(printer_name):
+    hdc = win32ui.CreateDC()
+    hdc.CreatePrinterDC(printer_name)
+
+    GS = '\x1D'
+
+    cut_command = GS + 'V' + '\x42' + '\x00'
+
+    hdc.StartDoc("Cut Paper")
+    hdc.StartPage()
+
+    hdc.GetHandleOutput().Write(cut_command.encode())
+
+    hdc.EndPage()
+    hdc.EndDoc()
+    hdc.DeleteDC()
+
+    print("Wysłano komendę do ucięcia papieru.")
+
 setup_database()
 
 printer_name = win32print.GetDefaultPrinter()
@@ -118,6 +135,8 @@ else:
     print_image('blank1.png', printer_name)
     print_image(qr_image_path, printer_name)
     print_image('blank2.png', printer_name)
+
+    cut_paper(printer_name)  
 
     scanned_id = qr_code_id  
     if scan_qr_code(scanned_id):

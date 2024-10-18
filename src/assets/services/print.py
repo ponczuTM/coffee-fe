@@ -43,7 +43,7 @@ def print_image(image_path, printer_name):
     new_height = int(img.height)
 
     # img = img.resize((new_width, new_height), Image.ANTIALIAS)
-    img = img.resize((new_width, new_height), Image.LANCZOS)
+    # img = img.resize((new_width, new_height), Image.LANCZOS)
 
     hdc = win32ui.CreateDC()
     hdc.CreatePrinterDC(printer_name)

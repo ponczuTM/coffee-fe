@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  color: gray;
+  color: black;
   background-color: rgb(0, 0, 0);
 }
 
@@ -30,8 +30,8 @@
 
 .timer,
 .score {
-  margin-top: 10px;
-  font-size: 1.5rem;
+  font-size: 40rem;
+  color: white;
 }
 
 .game-over {
@@ -97,14 +97,62 @@ button {
   border: 1px solid blue;
 }
 
-.timer,
-.score {
-  font-size: 1.5rem;
-  margin: 10px;
-}
-
 .no {
   background-color: rgb(106, 0, 0);
   width: auto;
   height: auto;
+}
+
+.results-table {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50rem;
+  height: auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 100rem rgba(0, 0, 0, 0.8);
+  z-index: 1001;
+}
+
+.results-content {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 10px;
+  font-size: 3rem;
+  vertical-align: middle;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 1rem;
+  padding: 20px;
+}
+
+.tabletable {
+  background-color: rgb(0, 0, 91);
+  margin-top: 180px;
+  width: 28rem;
+  border-radius: 1rem;
+}
+
+.gameText {
+  font-size: 4rem;
+}
+
+.close {
+  background-color: #4a0000;
+  margin-top: 50px;
 }

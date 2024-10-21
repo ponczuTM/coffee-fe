@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { database, ref, set, get, child } from "../../firebase";
 import "./Game.css";
 
 const GRID_SIZE = 10;
+const SCORE_NEEDED = 1;
 
 const Game = ({ resetGame }) => {
   const [grid, setGrid] = useState([]);
@@ -15,6 +17,10 @@ const Game = ({ resetGame }) => {
   const [countdown, setCountdown] = useState(3);
   const [isCountdownActive, setIsCountdownActive] = useState(true);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [name, setName] = useState("");
+  const [isNameSubmitted, setIsNameSubmitted] = useState(false);
+  const [isTableVisible, setIsTableVisible] = useState(false);
+  const [scores, setScores] = useState([]);
 
   useEffect(() => {
     const generateGrid = () => {
@@ -62,7 +68,7 @@ const Game = ({ resetGame }) => {
   const handleSquareClick = (row, col) => {
     if (row === redSquare.row && col === redSquare.col) {
       setScore(score + 1);
-      if (score + 1 === 10) {
+      if (score + 1 === SCORE_NEEDED) {
         setGameOver(true);
         if (timeElapsed <= 10) {
           setMessage(
@@ -70,11 +76,12 @@ const Game = ({ resetGame }) => {
               {`Twój czas to: ${timeElapsed} s.`}
               <br />
               <br />
-              {`Gratulacje!`}
-              <br />
-              {`Wygrałeś kawę!`}
+              {`Gratulacje! Wygrałeś kawę!`}
               <br />
               {`POKAŻ KOD QR W SALI KONFERENCYJNEJ.`}
+              <br />
+              <br />
+              {`Podaj swoje imię lub nick, aby zapisać wynik:`}
             </>
           );
         } else {
@@ -85,9 +92,7 @@ const Game = ({ resetGame }) => {
               <br />
               {`Niestety, musisz spróbować jeszcze raz.`}
               <br />
-              {`osiągnij czas do 10s,`}
-              <br />
-              {`aby wygrać kawę.`}
+              {`Osiągnij czas do 10s, aby wygrać kawę.`}
               <br />
               <br />
               <button
@@ -107,6 +112,25 @@ const Game = ({ resetGame }) => {
       } else {
         randomizeRedSquare();
       }
+    }
+  };
+
+  const saveScoreToFirebase = (name, time) => {
+    const scoreRef = ref(database, "coffeescores/" + name);
+    set(scoreRef, time)
+      .then(() => {
+        console.log("Wynik zapisany pomyślnie!");
+        setIsNameSubmitted(true);
+      })
+      .catch((error) => {
+        console.error("Błąd przy zapisie wyniku:", error);
+      });
+  };
+
+  const handleNameSubmit = (e) => {
+    e.preventDefault();
+    if (name.trim()) {
+      saveScoreToFirebase(name, timeElapsed);
     }
   };
 
@@ -139,6 +163,29 @@ const Game = ({ resetGame }) => {
 
   const handleCoffeeReject = () => {
     resetGame();
+  };
+
+  const fetchScoresFromFirebase = () => {
+    const scoresRef = ref(database);
+    get(child(scoresRef, "coffeescores"))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const scoresArray = Object.entries(data).map(([name, time]) => ({
+            name,
+            time: parseFloat(time.replace(":", ".")),
+          }));
+
+          scoresArray.sort((a, b) => a.time - b.time);
+          setScores(scoresArray.slice(0, 10));
+          setIsTableVisible(true);
+        } else {
+          console.log("Brak danych");
+        }
+      })
+      .catch((error) => {
+        console.error("Błąd przy pobieraniu wyników:", error);
+      });
   };
 
   const countdownMessages = [
@@ -197,8 +244,41 @@ const Game = ({ resetGame }) => {
           {message}
           {timeElapsed <= 10 && !isCoffeeClaimed && (
             <div>
+              {!isNameSubmitted ? (
+                <form onSubmit={handleNameSubmit}>
+                  <input
+                    type="text"
+                    placeholder="Twoje imię/nazwisko lub nick"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    style={{
+                      fontSize: "3rem",
+                      textAlign: "center",
+                      marginBottom: "20px",
+                      border: "5px solid #007bff",
+                      borderRadius: "1rem",
+                      width: "700px",
+                      height: "5rem",
+                    }}
+                  />
+                  <div>
+                    <button
+                      type="submit"
+                      style={{
+                        marginTop: "-20px",
+                        padding: "10px",
+                        fontSize: "3rem",
+                      }}
+                    >
+                      Wyślij
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <p>Dziękujemy za przesłanie wyniku!</p>
+              )}
               <button onClick={handleCoffeeClaim} style={{ marginTop: "50px" }}>
-                KLIKNIJ, ABY WYDRUKOWAĆ <br></br> KOD QR
+                KLIKNIJ, ABY WYDRUKOWAĆ <br /> KOD QR
               </button>
               <br />
               <button
@@ -208,12 +288,25 @@ const Game = ({ resetGame }) => {
               >
                 Nie chcę kawy
               </button>
+
+              {timeElapsed <= 10 && (
+                <div>
+                  <button
+                    onClick={fetchScoresFromFirebase}
+                    className="tabletable"
+                  >
+                    Tabela Wyników
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
       ) : (
         <>
-          <div className="timer">Czas: {timeElapsed}s</div>
+          <div className="timer">
+            <a className="gameText">Czas: {timeElapsed}s</a>
+          </div>
           <div className="grid">
             {grid.map((row, rowIndex) =>
               row.map((_, colIndex) => (
@@ -229,8 +322,43 @@ const Game = ({ resetGame }) => {
               ))
             )}
           </div>
-          <div className="score">Punkty: {score}</div>
+          <div className="score">
+            <a className="gameText">Punkty: {score}</a>
+          </div>
         </>
+      )}
+
+      {isTableVisible && (
+        <div className="results-table">
+          <div className="results-content">
+            <h2 style={{ fontSize: "4rem" }}>
+              TABELA WYNIKÓW
+              <br />
+              (Dzisiejsze TOP 10)
+            </h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Imię</th>
+                  <th>Czas</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scores.map((score, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{score.name}</td>
+                    <td>{score.time.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button onClick={() => setIsTableVisible(false)} className="close">
+              Zamknij
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

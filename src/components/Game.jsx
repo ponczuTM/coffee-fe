@@ -75,11 +75,9 @@ const Game = ({ resetGame }) => {
             <>
               {`Twój czas to: ${timeElapsed} s.`}
               <br />
-              <br />
               {"Gratulacje! Wygrałeś kawę!"}
               <br />
-              {"POKAŻ KOD QR W SALI KONFERENCYJNEJ."}
-              <br />
+              {"ODBIERZ JĄ W SALI KONFERENCYJNEJ."}
               <br />
               {"Podaj swoje imię lub nick, aby zapisać wynik:"}
             </>
@@ -98,7 +96,7 @@ const Game = ({ resetGame }) => {
               <button
                 onClick={handleCoffeeReject}
                 style={{ marginTop: "50px" }}
-                className="no"
+                className="no2"
               >
                 {"Spróbuj ponownie"}
               </button>
@@ -376,27 +374,24 @@ const Game = ({ resetGame }) => {
               ) : (
                 <p>Dziękujemy za przesłanie wyniku!</p>
               )}
-              <button onClick={handleCoffeeClaim} style={{ marginTop: "50px" }}>
-                KLIKNIJ, ABY WYDRUKOWAĆ <br /> KOD QR
+              <button
+                onClick={handleCoffeeClaim}
+                style={{ marginTop: "50px", fontSize: "2rem" }}
+              >
+                ODBIERZ KAWĘ (KOD QR)
               </button>
               <br />
-              <button
-                onClick={handleCoffeeReject}
-                style={{ marginTop: "50px" }}
-                className="no"
-              >
-                {"Nie chcę kawy"}
+              <button onClick={handleCoffeeReject} className="no2">
+                <a className="a">Nie chcę kawy</a>
               </button>
 
               {timeElapsed <= 10 && (
-                <div>
-                  <button
-                    onClick={fetchScoresFromFirebase}
-                    className="tabletable"
-                  >
-                    {"Tabela Wyników"}
-                  </button>
-                </div>
+                <button
+                  onClick={fetchScoresFromFirebase}
+                  className="tabletable"
+                >
+                  {"Tabela Wyników"}
+                </button>
               )}
             </div>
           )}

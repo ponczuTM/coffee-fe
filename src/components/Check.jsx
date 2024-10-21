@@ -61,6 +61,11 @@ const Check = () => {
     setInputBackground("rgba(0, 90, 0, 0.566)");
   };
 
+  const handleInputBlur = () => {
+    setInputText("☝ kliknij ☝");
+    setInputBackground("rgba(255, 111, 111, 0.266)");
+  };
+
   return (
     <div className="check-container">
       <input
@@ -71,6 +76,7 @@ const Check = () => {
         className="input-check"
         style={{ textAlign: "center", backgroundColor: inputBackground }}
         onClick={handleInputClick}
+        onBlur={handleInputBlur} 
       />
       {message && <h2 className="message">{message}</h2>}
     </div>

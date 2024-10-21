@@ -76,12 +76,12 @@ const Game = ({ resetGame }) => {
               {`Twój czas to: ${timeElapsed} s.`}
               <br />
               <br />
-              {`Gratulacje! Wygrałeś kawę!`}
+              {"Gratulacje! Wygrałeś kawę!"}
               <br />
-              {`POKAŻ KOD QR W SALI KONFERENCYJNEJ.`}
+              {"POKAŻ KOD QR W SALI KONFERENCYJNEJ."}
               <br />
               <br />
-              {`Podaj swoje imię lub nick, aby zapisać wynik:`}
+              {"Podaj swoje imię lub nick, aby zapisać wynik:"}
             </>
           );
         } else {
@@ -90,9 +90,9 @@ const Game = ({ resetGame }) => {
               {`Twój czas to: ${timeElapsed} s.`}
               <br />
               <br />
-              {`Niestety, musisz spróbować jeszcze raz.`}
+              {"Niestety, musisz spróbować jeszcze raz."}
               <br />
-              {`Osiągnij czas do 10s, aby wygrać kawę.`}
+              {"Osiągnij czas do 10s, aby wygrać kawę."}
               <br />
               <br />
               <button
@@ -100,7 +100,7 @@ const Game = ({ resetGame }) => {
                 style={{ marginTop: "50px" }}
                 className="no"
               >
-                Spróbuj ponownie
+                {"Spróbuj ponownie"}
               </button>
             </>
           );
@@ -196,6 +196,107 @@ const Game = ({ resetGame }) => {
 
   const countdownBackgroundColors = ["#470500", "#464700", "#014700"];
 
+  const VirtualKeyboard = ({ onKeyPress }) => {
+    const keys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "✖"];
+    const keys2 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
+    const keys3 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
+    const keys4 = ["Z", "X", "C", "V", "B", "N", "M"];
+    const keys5 = ["___________________"];
+
+    return (
+      <div className="virtual-keyboard">
+        <div>
+          {keys.map((key) => (
+            <button
+              key={key}
+              className="key"
+              onClick={() => {
+                if (key === "✖") {
+                  onKeyPress("");
+                } else {
+                  onKeyPress(name + key);
+                }
+              }}
+            >
+              {key}
+            </button>
+          ))}
+        </div>
+        <div>
+          {keys2.map((key) => (
+            <button
+              key={key}
+              className="key"
+              onClick={() => {
+                if (key === "Clear") {
+                  onKeyPress("");
+                } else {
+                  onKeyPress(name + key);
+                }
+              }}
+            >
+              {key}
+            </button>
+          ))}
+        </div>
+
+        <div>
+          {keys3.map((key) => (
+            <button
+              key={key}
+              className="key"
+              onClick={() => {
+                if (key === "Clear") {
+                  onKeyPress("");
+                } else {
+                  onKeyPress(name + key);
+                }
+              }}
+            >
+              {key}
+            </button>
+          ))}
+        </div>
+
+        <div>
+          {keys4.map((key) => (
+            <button
+              key={key}
+              className="key"
+              onClick={() => {
+                if (key === "Clear") {
+                  onKeyPress("");
+                } else {
+                  onKeyPress(name + key);
+                }
+              }}
+            >
+              {key}
+            </button>
+          ))}
+        </div>
+
+        <div className="wide-keyboard">
+          {keys5.map((key) => (
+            <button
+              key={key}
+              className="key"
+              onClick={() => {
+                if (key === "Clear") {
+                  onKeyPress("");
+                } else {
+                  onKeyPress(name + key);
+                }
+              }}
+            >
+              {key}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="game-container">
       {isPrinting ? (
@@ -217,9 +318,7 @@ const Game = ({ resetGame }) => {
             zIndex: 1000,
           }}
         >
-          POCZEKAJ
-          <br />
-          NA WYDRUK
+          {"POCZEKAJ NA WYDRUK"}
         </div>
       ) : isCountdownActive ? (
         <div
@@ -270,7 +369,7 @@ const Game = ({ resetGame }) => {
                         fontSize: "3rem",
                       }}
                     >
-                      Wyślij
+                      {"Wyślij"}
                     </button>
                   </div>
                 </form>
@@ -286,7 +385,7 @@ const Game = ({ resetGame }) => {
                 style={{ marginTop: "50px" }}
                 className="no"
               >
-                Nie chcę kawy
+                {"Nie chcę kawy"}
               </button>
 
               {timeElapsed <= 10 && (
@@ -295,7 +394,7 @@ const Game = ({ resetGame }) => {
                     onClick={fetchScoresFromFirebase}
                     className="tabletable"
                   >
-                    Tabela Wyników
+                    {"Tabela Wyników"}
                   </button>
                 </div>
               )}
@@ -359,6 +458,10 @@ const Game = ({ resetGame }) => {
             </button>
           </div>
         </div>
+      )}
+
+      {!isNameSubmitted && gameOver && timeElapsed <= 10 && (
+        <VirtualKeyboard onKeyPress={(value) => setName(value)} />
       )}
     </div>
   );

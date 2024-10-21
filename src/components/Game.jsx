@@ -3,7 +3,7 @@ import { database, ref, set, get, child } from "../../firebase";
 import "./Game.css";
 
 const GRID_SIZE = 10;
-const SCORE_NEEDED = 1;
+const SCORE_NEEDED = 10;
 
 const Game = ({ resetGame }) => {
   const [grid, setGrid] = useState([]);

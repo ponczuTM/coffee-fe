@@ -30,7 +30,6 @@
 
 .timer,
 .score {
-  font-size: 40rem;
   color: white;
 }
 
@@ -165,24 +164,23 @@ button {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  background-color: #6ea6ff3c; 
+  background-color: #6ea6ff3c;
   padding: 20px;
   border-radius: 1rem;
   margin: 20px 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .key {
-  background-color: #201414; 
-  border: 3px solid #007bff; 
-  border-radius: 15px; 
-  font-size: 2rem; 
-  margin: 5px; 
-  padding: 10px 15px; 
-  cursor: pointer; 
-  transition: background-color 0.3s, transform 0.1s; 
+  background-color: #201414;
+  border: 3px solid #007bff;
+  border-radius: 15px;
+  font-size: 2rem;
+  margin: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
 }
-
 
 .wide-keyboard {
   width: 1000px;

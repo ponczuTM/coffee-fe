@@ -56,9 +56,7 @@ function Table() {
         <input
           type="text"
           placeholder={
-            inputFocus
-              ? "TERAZ ZESKANUJ KOD QR"
-              : "KLIKNIJ KLIKNIJ KLIKNIJ KLIKNIJ"
+            inputFocus ? "📲 ZESKANUJ QR 📲" : "☝ KLIKNIJ ☝ KLIKNIJ ☝"
           }
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

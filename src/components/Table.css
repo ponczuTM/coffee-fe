@@ -110,7 +110,7 @@ input {
   margin-left: 5px;
 }
 
-input {
+.search-input {
   width: 100%;
   height: auto;
   font-size: 70px;
@@ -121,7 +121,7 @@ input {
   transition: background-color 0.2s;
 }
 
-input:focus {
+.search-input:focus {
   background-color: rgba(118, 255, 118, 0.385);
   outline: none;
 }

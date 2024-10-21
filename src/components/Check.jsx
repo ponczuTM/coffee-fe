@@ -5,6 +5,10 @@ import "./Check.css";
 const Check = () => {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
+  const [inputText, setInputText] = useState("☝ kliknij ☝");
+  const [inputBackground, setInputBackground] = useState(
+    "rgba(255, 111, 111, 0.266)"
+  );
 
   useEffect(() => {
     if (code.length >= 6) {
@@ -52,15 +56,21 @@ const Check = () => {
     }
   }, [code]);
 
+  const handleInputClick = () => {
+    setInputText("📲 ZESKANUJ QR 📲");
+    setInputBackground("rgba(0, 90, 0, 0.566)");
+  };
+
   return (
     <div className="check-container">
       <input
         type="text"
         value={code}
         onChange={(e) => setCode(e.target.value)}
-        placeholder="ZESKANUJ KOD QR"
-        className="input-field"
-        style={{ textAlign: "center" }}
+        placeholder={inputText}
+        className="input-check"
+        style={{ textAlign: "center", backgroundColor: inputBackground }}
+        onClick={handleInputClick}
       />
       {message && <h2 className="message">{message}</h2>}
     </div>

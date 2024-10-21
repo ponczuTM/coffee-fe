@@ -280,11 +280,7 @@ const Game = ({ resetGame }) => {
               key={key}
               className="key"
               onClick={() => {
-                if (key === "Clear") {
-                  onKeyPress("");
-                } else {
-                  onKeyPress(name + key);
-                }
+                onKeyPress(name + " ");
               }}
             >
               {key}

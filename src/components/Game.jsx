@@ -175,7 +175,7 @@ const Game = ({ resetGame }) => {
           }));
 
           scoresArray.sort((a, b) => a.time - b.time);
-          setScores(scoresArray.slice(0, 10));
+          setScores(scoresArray.slice(0, 5));
           setIsTableVisible(true);
         } else {
           console.log("Brak danych");
@@ -424,7 +424,7 @@ const Game = ({ resetGame }) => {
             <h2 style={{ fontSize: "4rem" }}>
               TABELA WYNIKÓW
               <br />
-              (Dzisiejsze TOP 10)
+              (Dzisiejsze TOP 5)
             </h2>
             <table>
               <thead>

@@ -3,7 +3,7 @@ import { database, ref, set, get, child } from "../../firebase";
 import "./Game.css";
 
 const GRID_SIZE = 10;
-const SCORE_NEEDED = 1;
+const SCORE_NEEDED = 10;
 
 const Game = ({ resetGame }) => {
   const [grid, setGrid] = useState([]);
@@ -133,10 +133,6 @@ const Game = ({ resetGame }) => {
   };
 
   const handleCoffeeClaim = () => {
-    if (name.trim()) {
-      saveScoreToFirebase(name, timeElapsed);
-    }
-
     setIsCoffeeClaimed(true);
     setIsPrinting(true);
 
@@ -189,8 +185,6 @@ const Game = ({ resetGame }) => {
         console.error("Błąd przy pobieraniu wyników:", error);
       });
   };
-
-  const finishButton = () => {};
 
   const countdownMessages = [
     "Kliknij logo EXON 10 razy",
@@ -361,7 +355,7 @@ const Game = ({ resetGame }) => {
                     }}
                   />
                   <div>
-                    {/* <button
+                    <button
                       type="submit"
                       style={{
                         marginTop: "-20px",
@@ -370,7 +364,7 @@ const Game = ({ resetGame }) => {
                       }}
                     >
                       {"Wyślij"}
-                    </button> */}
+                    </button>
                   </div>
                 </form>
               ) : (

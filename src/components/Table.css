@@ -8,7 +8,7 @@
 
 h1 {
   text-align: center;
-  color: #333;
+  color: #000;
 }
 
 .coffee-table {
@@ -20,7 +20,7 @@ h1 {
 
 .coffee-table th,
 .coffee-table td {
-  border: 1px solid #ccc;
+  border: 2px solid #000000;
   padding: 10px;
   text-align: center;
   font-size: 4rem;
@@ -83,4 +83,45 @@ input {
 }
 .yes {
   font-size: 80px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.clear-button {
+  width: 10%;
+  padding: 10px;
+  background-color: #ff6961;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 1rem;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+input {
+  width: 100%;
+  height: auto;
+  font-size: 70px;
+  color: black;
+  border: 15px solid black;
+  border-radius: 20px;
+  background-color: rgba(255, 111, 111, 0.321);
+  transition: background-color 0.2s;
+}
+
+input:focus {
+  background-color: rgba(118, 255, 118, 0.385);
+  outline: none;
 }

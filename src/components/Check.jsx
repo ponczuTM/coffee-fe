@@ -41,7 +41,7 @@ const Check = () => {
           setTimeout(() => {
             setMessage("");
             setCode("");
-          }, 3000);
+          }, 4000);
         },
         {
           onlyOnce: true,

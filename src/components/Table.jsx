@@ -7,6 +7,7 @@ function Table() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [coffeeToDelete, setCoffeeToDelete] = useState(null);
+  const [inputFocus, setInputFocus] = useState(false); // State for input focus
 
   useEffect(() => {
     const coffeesRef = ref(database, "coffees");
@@ -43,18 +44,32 @@ function Table() {
     coffee.coffee.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
+
   return (
     <div className="container">
-      <h1>TABELA KAW</h1>
+      <h1 style={{ fontSize: "4rem" }}>TABELA KAW</h1>
 
-      <input
-        type="text"
-        placeholder="Wyszukaj kawę..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="search-input"
-        style={{ textAlign: 'center' }}
-      />
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder={
+            inputFocus
+              ? "TERAZ ZESKANUJ KOD QR"
+              : "KLIKNIJ KLIKNIJ KLIKNIJ KLIKNIJ"
+          }
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+          onFocus={() => setInputFocus(true)}
+          onBlur={() => setInputFocus(false)}
+        />
+        <button className="clear-button" onClick={clearSearch}>
+          ✖
+        </button>
+      </div>
 
       <table className="coffee-table">
         <thead>
@@ -71,7 +86,9 @@ function Table() {
                 <td>☕</td>
                 <td>{coffee.coffee}</td>
                 <td>
-                  <button onClick={() => handleDeleteClick(coffee)} >WYDANO</button>
+                  <button onClick={() => handleDeleteClick(coffee)}>
+                    WYDANO
+                  </button>
                 </td>
               </tr>
             ))
@@ -88,8 +105,12 @@ function Table() {
           <div className="modal-content">
             <h2>Potwierdzenie</h2>
             <p>Czy na pewno wydano kawę: {coffeeToDelete.coffee}?</p>
-            <button onClick={confirmDelete} className="yes">TAK</button>
-            <button onClick={cancelDelete} className="no">NIE</button>
+            <button onClick={confirmDelete} className="yes">
+              TAK
+            </button>
+            <button onClick={cancelDelete} className="no">
+              NIE
+            </button>
           </div>
         </div>
       )}

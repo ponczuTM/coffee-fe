@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { database, ref, set, get, child } from "../../firebase";
 import "./Game.css";
+import logo from "./../assets/images/logo.png"
 
 const GRID_SIZE = 10;
 const SCORE_NEEDED = 10;
@@ -65,51 +66,46 @@ const Game = ({ resetGame }) => {
     setRedSquare({ row, col });
   };
 
-  const handleSquareClick = (row, col) => {
-    if (row === redSquare.row && col === redSquare.col) {
-      setScore(score + 1);
-      if (score + 1 === SCORE_NEEDED) {
-        setGameOver(true);
-        if (timeElapsed <= 10) {
-          setMessage(
-            <>
-              {`Twój czas to: ${timeElapsed} s.`}
-              <br />
-              {"Gratulacje! Wygrałeś kawę!"}
-              <br />
-              {"ODBIERZ JĄ W SALI KONFERENCYJNEJ."}
-              <br />
-              {"Podaj swoje imię lub nick, aby zapisać wynik:"}
-            </>
-          );
-        } else {
-          setMessage(
-            <>
-              {`Twój czas to: ${timeElapsed} s.`}
-              <br />
-              <br />
-              {"Niestety, musisz spróbować jeszcze raz."}
-              <br />
-              {"Osiągnij czas do 10s, aby wygrać kawę."}
-              <br />
-              <br />
-              <button
-                onClick={handleCoffeeReject}
-                style={{ marginTop: "50px" }}
-                className="no2"
-              >
-                {"Spróbuj ponownie"}
-              </button>
-            </>
-          );
-          setTimeout(() => {
-            setMessage("");
-            resetGame();
-          }, 10000);
-        }
+  // The handleSquareClick function is now renamed to handleImageClick
+  const handleImageClick = () => {
+    setScore(score + 1);
+    if (score + 1 === SCORE_NEEDED) {
+      setGameOver(true);
+      if (timeElapsed <= 10) {
+        setMessage(
+          <>
+            {`Twój czas to: ${timeElapsed} s.`}
+            <br />
+            {"Gratulacje! Wygrałeś!"}
+          </>
+        );
       } else {
-        randomizeRedSquare();
+        setMessage(
+          <>
+            {`Twój czas to: ${timeElapsed} s.`}
+            <br />
+            <br />
+            {"Niestety, musisz spróbować jeszcze raz."}
+            <br />
+            {"Osiągnij czas do 10s, aby wygrać!"}
+            <br />
+            <br />
+            <button
+              onClick={handleCoffeeReject}
+              style={{ marginTop: "50px" }}
+              className="no2"
+            >
+              {"Spróbuj ponownie"}
+            </button>
+          </>
+        );
+        setTimeout(() => {
+          setMessage("");
+          resetGame();
+        }, 10000);
       }
+    } else {
+      randomizeRedSquare();
     }
   };
 
@@ -186,14 +182,12 @@ const Game = ({ resetGame }) => {
         }
       })
       .catch((error) => {
-        console.error("Błąd przy pobieraniu wyników:", error);
+        console.error("Błąd przy pobieraniu wynoruw:", error);
       });
   };
 
-  const finishButton = () => {};
-
   const countdownMessages = [
-    "Kliknij logo EXON 10 razy",
+    "Kliknij syrenkę 10 razy",
     "Masz na to 10 sekund",
     "POWODZENIA!",
   ];
@@ -408,13 +402,20 @@ const Game = ({ resetGame }) => {
               row.map((_, colIndex) => (
                 <div
                   key={`${rowIndex}-${colIndex}`}
-                  className={`square ${
-                    redSquare.row === rowIndex && redSquare.col === colIndex
-                      ? "red"
-                      : "white"
-                  }`}
-                  onClick={() => handleSquareClick(rowIndex, colIndex)}
-                />
+                  className="square"
+                  // Removed onClick from here
+                >
+                  {redSquare.row === rowIndex && redSquare.col === colIndex && (
+                    <div className="red-image-wrapper">
+                      <img
+                        src={logo}
+                        alt="Click Me"
+                        className="red-image"
+                        onClick={handleImageClick} // Click handler moved here
+                      />
+                    </div>
+                  )}
+                </div>
               ))
             )}
           </div>

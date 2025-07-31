@@ -156,7 +156,7 @@ const Game = ({ resetGame }) => {
     setTimeout(() => {
       setIsPrinting(false);
       resetGame();
-    }, 5000);
+    }, 0); // BYŁO 5000 USUNĄĆ/ZMIENIĆ
   };
 
   const handleCoffeeReject = () => {
@@ -202,7 +202,7 @@ const Game = ({ resetGame }) => {
     const keys5 = ["___________________"];
 
     return (
-      <div className="virtual-keyboard">
+      <div className="virtual-keyboard" style={{ display: "none" }}> {/* USUNĄĆ / ZMIENIĆ */}
         <div>
           {keys.map((key) => (
             <button
@@ -338,7 +338,8 @@ const Game = ({ resetGame }) => {
           {timeElapsed <= 10 && !isCoffeeClaimed && (
             <div>
               {!isNameSubmitted ? (
-                <form onSubmit={handleNameSubmit}>
+                <form onSubmit={handleNameSubmit} style={{ display: "none" }}>
+                  {/* usunąć/zmienić */}
                   <input
                     type="text"
                     placeholder="Twoje imię/nazwisko lub nick"
@@ -377,7 +378,7 @@ const Game = ({ resetGame }) => {
                 ODBIERZ KAWĘ (KOD QR)
               </button>
               <br />
-              <button onClick={handleCoffeeReject} className="no2">
+              <button onClick={handleCoffeeReject} className="no2" style={{ display: "none" }}> {/*//USUNĄĆ / ZMIENIĆ*/}
                 <a className="a">Nie chcę kawy</a>
               </button>
 
@@ -385,6 +386,7 @@ const Game = ({ resetGame }) => {
                 <button
                   onClick={fetchScoresFromFirebase}
                   className="tabletable"
+                  style={{ display: "none" }} //USUNĄĆ / ZMIENIĆ
                 >
                   {"Tabela Wyników"}
                 </button>
@@ -403,7 +405,7 @@ const Game = ({ resetGame }) => {
                 <div
                   key={`${rowIndex}-${colIndex}`}
                   className="square"
-                  // Removed onClick from here
+                // Removed onClick from here
                 >
                   {redSquare.row === rowIndex && redSquare.col === colIndex && (
                     <div className="red-image-wrapper">

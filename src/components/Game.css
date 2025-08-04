@@ -1,3 +1,8 @@
+body {
+  margin: 0;
+  overflow: hidden; /* Zapobiega przewijaniu, jeśli elementy wyjdą poza widoczny obszar */
+}
+
 .game-container {
   display: flex;
   flex-direction: column;
@@ -6,70 +11,71 @@
   height: 100vh;
   color: black;
   background-color: rgb(0, 0, 0);
+  width: 100vw;
+  position: relative; /* Ważne dla pozycjonowania timer i score */
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(10, 50px);
-  grid-template-rows: repeat(10, 50px);
-  gap: 5px;
-  position: relative; /* Needed for positioning the large image */
+.game-area {
+  position: absolute; /* Pozycjonujemy absolutnie względem .game-container */
+  width: 900px; /* GAME_AREA_WIDTH */
+  height: 1500px; /* GAME_AREA_HEIGHT */
+  border: 5px solid red; /* Czerwona ramka dla obszaru gry */
+  background-color: transparent; /* Brak wypełnienia obszaru gry */
+
+  /* Ustawienie pozycji obszaru gry */
+  left: 100px; /* GAME_AREA_OFFSET_X */
+  top: 200px; /* GAME_AREA_OFFSET_Y */
 }
 
+/* Usunięcie stylów dla .grid i .square, ponieważ nie będziemy ich używać */
+.grid,
 .square {
-  width: 50px;
-  height: 50px;
-  background-color: transparent; /* No background color for squares themselves */
-  border: 0px solid blue; /* No border for squares themselves */
-  position: relative; /* Important for positioning the inner image */
-  overflow: visible; /* Allow content to spill out */
-  /* Removed cursor: pointer; as the click is now on the image */
+  display: none;
 }
+
 
 .red-image-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Center the image */
-  width: 200px; /* Desired image width */
-  height: 200px; /* Desired image height */
-  z-index: 10; /* Ensure it's on top of other squares */
-  /* pointer-events: none; */ /* This was previously to let clicks go to the square, now we want clicks ON the image */
+  position: absolute; /* Pozycjonowany absolutnie wewnątrz .game-area */
+  width: 200px; /* Szerokość obrazka */
+  height: 200px; /* Wysokość obrazka */
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  transition: transform 0.03s ease-in-out;
 }
 
 .red-image {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Ensure the image fits within its wrapper */
-  cursor: pointer; /* Add pointer cursor to the image itself */
+  object-fit: contain;
+  cursor: pointer;
 }
 
-.timer,
-.score {
-  margin-top: 100px;
-  margin-bottom: 100px;
+.timer {
+  position: absolute; /* Pozycjonowanie absolutne */
+  top: 100px; /* 100px od góry */
+  left: 50%; /* Wyśrodkowanie */
+  transform: translateX(-50%); /* Dokładne wyśrodkowanie poziome */
   color: white;
+  z-index: 100;
 }
+
+.score {
+  position: absolute; /* Pozycjonowanie absolutne */
+  bottom: 100px; /* 100px od dołu */
+  left: 50%; /* Wyśrodkowanie */
+  transform: translateX(-50%); /* Dokładne wyśrodkowanie poziome */
+  color: white;
+  z-index: 100;
+}
+
 
 .game-over {
   font-size: 2rem;
   color: white;
-}
-
-.game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-.game-over {
   text-align: center;
-  font-size: 3rem;
   margin: 20px 0;
 }
 
@@ -131,13 +137,6 @@ td {
   font-size: 3rem;
   vertical-align: middle;
   max-width: 3000px;
-}
-
-button {
-  margin-top: 20px;
-  padding: 10px;
-  border-radius: 1rem;
-  padding: 20px;
 }
 
 .tabletable {

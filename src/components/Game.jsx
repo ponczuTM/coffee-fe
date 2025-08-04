@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { database, ref, set, get, child } from "../../firebase";
 import "./Game.css";
-import logo from "./../assets/images/logo.png"
+import logo from "./../assets/images/logo.png";
 
-const GRID_SIZE = 10;
+// Definicje stałych dla obszaru gry
+const GAME_AREA_WIDTH = 900; // Szerokość obszaru (np. 900 - 100)
+const GAME_AREA_HEIGHT = 1500; // Wysokość obszaru (np. 1200 - 200)
+const GAME_AREA_OFFSET_X = 100; // Współrzędna X lewego górnego rogu
+const GAME_AREA_OFFSET_Y = 200; // Współrzędna Y lewego górnego rogu
+
 const SCORE_NEEDED = 10;
+const IMAGE_SIZE_PX = 200; // Przyjmujemy rozmiar obrazka z CSS
+const MIN_DISTANCE = 200; // Minimalna odległość od poprzedniej pozycji
 
 const Game = ({ resetGame }) => {
-  const [grid, setGrid] = useState([]);
-  const [redSquare, setRedSquare] = useState({ row: 0, col: 0 });
+  const [redSquarePosition, setRedSquarePosition] = useState({ x: 0, y: 0 });
   const [score, setScore] = useState(0);
   const [startTime, setStartTime] = useState(null);
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -24,16 +30,7 @@ const Game = ({ resetGame }) => {
   const [scores, setScores] = useState([]);
 
   useEffect(() => {
-    const generateGrid = () => {
-      const tempGrid = [];
-      for (let row = 0; row < GRID_SIZE; row++) {
-        tempGrid.push(new Array(GRID_SIZE).fill(false));
-      }
-      return tempGrid;
-    };
-
-    setGrid(generateGrid());
-    randomizeRedSquare();
+    randomizeRedSquare(true); // Wywołaj przy pierwszym renderze, pomijając sprawdzenie odległości
   }, []);
 
   useEffect(() => {
@@ -60,13 +57,35 @@ const Game = ({ resetGame }) => {
     }
   }, [startTime, gameOver, isCountdownActive]);
 
-  const randomizeRedSquare = () => {
-    const row = Math.floor(Math.random() * GRID_SIZE);
-    const col = Math.floor(Math.random() * GRID_SIZE);
-    setRedSquare({ row, col });
+  const randomizeRedSquare = (initial = false) => {
+    let newX, newY;
+    let attempts = 0;
+    const maxAttempts = 50; // Ogranicz liczbę prób, aby uniknąć nieskończonej pętli
+
+    do {
+      newX = Math.random() * (GAME_AREA_WIDTH - IMAGE_SIZE_PX);
+      newY = Math.random() * (GAME_AREA_HEIGHT - IMAGE_SIZE_PX);
+      attempts++;
+
+      if (initial || attempts > maxAttempts) {
+        // Przy pierwszym uruchomieniu lub po wielu próbach, zaakceptuj dowolną pozycję
+        break;
+      }
+
+      // Oblicz odległość od poprzedniej pozycji
+      const distance = Math.sqrt(
+        Math.pow(newX - redSquarePosition.x, 2) +
+        Math.pow(newY - redSquarePosition.y, 2)
+      );
+
+      if (distance >= MIN_DISTANCE) {
+        break; // Znaleziono odpowiednią pozycję
+      }
+    } while (true); // Pętla będzie kontynuowana, dopóki nie znajdziemy odpowiedniej pozycji lub nie przekroczymy maxAttempts
+
+    setRedSquarePosition({ x: newX, y: newY });
   };
 
-  // The handleSquareClick function is now renamed to handleImageClick
   const handleImageClick = () => {
     setScore(score + 1);
     if (score + 1 === SCORE_NEEDED) {
@@ -91,7 +110,7 @@ const Game = ({ resetGame }) => {
             <br />
             <br />
             <button
-              onClick={handleCoffeeReject}
+              onClick={() => window.location.reload()} // Zmieniono z handleCoffeeReject na odświeżenie
               style={{ marginTop: "50px" }}
               className="no2"
             >
@@ -99,10 +118,7 @@ const Game = ({ resetGame }) => {
             </button>
           </>
         );
-        setTimeout(() => {
-          setMessage("");
-          resetGame();
-        }, 10000);
+        // Usunięto setTimeout, ponieważ strona będzie odświeżona od razu po kliknięciu "Spróbuj ponownie"
       }
     } else {
       randomizeRedSquare();
@@ -155,12 +171,12 @@ const Game = ({ resetGame }) => {
 
     setTimeout(() => {
       setIsPrinting(false);
-      resetGame();
+      window.location.reload(); // Zmieniono z resetGame na odświeżenie
     }, 5000);
   };
 
   const handleCoffeeReject = () => {
-    resetGame();
+    window.location.reload(); // Zmieniono z resetGame na odświeżenie
   };
 
   const fetchScoresFromFirebase = () => {
@@ -210,7 +226,7 @@ const Game = ({ resetGame }) => {
               className="key"
               onClick={() => {
                 if (key === "✖") {
-                  onKeyPress("");
+                  onKeyPress(name.slice(0, -1)); // Usuń ostatni znak
                 } else {
                   onKeyPress(name + key);
                 }
@@ -226,11 +242,7 @@ const Game = ({ resetGame }) => {
               key={key}
               className="key"
               onClick={() => {
-                if (key === "Clear") {
-                  onKeyPress("");
-                } else {
-                  onKeyPress(name + key);
-                }
+                onKeyPress(name + key);
               }}
             >
               {key}
@@ -244,11 +256,7 @@ const Game = ({ resetGame }) => {
               key={key}
               className="key"
               onClick={() => {
-                if (key === "Clear") {
-                  onKeyPress("");
-                } else {
-                  onKeyPress(name + key);
-                }
+                onKeyPress(name + key);
               }}
             >
               {key}
@@ -262,11 +270,7 @@ const Game = ({ resetGame }) => {
               key={key}
               className="key"
               onClick={() => {
-                if (key === "Clear") {
-                  onKeyPress("");
-                } else {
-                  onKeyPress(name + key);
-                }
+                onKeyPress(name + key);
               }}
             >
               {key}
@@ -355,16 +359,7 @@ const Game = ({ resetGame }) => {
                     }}
                   />
                   <div>
-                    {/* <button
-                      type="submit"
-                      style={{
-                        marginTop: "-20px",
-                        padding: "10px",
-                        fontSize: "3rem",
-                      }}
-                    >
-                      {"Wyślij"}
-                    </button> */}
+                    {/* The submit button for the form is implicitly handled by VirtualKeyboard and its onKeyPress */}
                   </div>
                 </form>
               ) : (
@@ -397,27 +392,20 @@ const Game = ({ resetGame }) => {
           <div className="timer">
             <a className="gameText">Czas: {timeElapsed}s</a>
           </div>
-          <div className="grid">
-            {grid.map((row, rowIndex) =>
-              row.map((_, colIndex) => (
-                <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className="square"
-                  // Removed onClick from here
-                >
-                  {redSquare.row === rowIndex && redSquare.col === colIndex && (
-                    <div className="red-image-wrapper">
-                      <img
-                        src={logo}
-                        alt="Click Me"
-                        className="red-image"
-                        onClick={handleImageClick} // Click handler moved here
-                      />
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
+          <div className="game-area">
+            <div
+              className="red-image-wrapper"
+              style={{
+                transform: `translate(${redSquarePosition.x}px, ${redSquarePosition.y}px)`,
+              }}
+            >
+              <img
+                src={logo}
+                alt="Click Me"
+                className="red-image"
+                onClick={handleImageClick}
+              />
+            </div>
           </div>
           <div className="score">
             <a className="gameText">Punkty: {score}</a>

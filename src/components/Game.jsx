@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { database, ref, set, get, child } from "../../firebase";
 import "./Game.css";
 import logo from "./../assets/images/logo.png";
+import bg from "./../assets/images/bg.png";
 
 // Definicje stałych dla obszaru gry
 const GAME_AREA_WIDTH = 900; // Szerokość obszaru (np. 900 - 100)
@@ -9,7 +10,7 @@ const GAME_AREA_HEIGHT = 1500; // Wysokość obszaru (np. 1200 - 200)
 const GAME_AREA_OFFSET_X = 100; // Współrzędna X lewego górnego rogu
 const GAME_AREA_OFFSET_Y = 200; // Współrzędna Y lewego górnego rogu
 
-const SCORE_NEEDED = 10;
+const SCORE_NEEDED = 1;
 const IMAGE_SIZE_PX = 200; // Przyjmujemy rozmiar obrazka z CSS
 const MIN_DISTANCE = 200; // Minimalna odległość od poprzedniej pozycji
 
@@ -92,16 +93,21 @@ const Game = ({ resetGame }) => {
       setGameOver(true);
       if (timeElapsed <= 10) {
         setMessage(
-          <>
-            {`Twój czas to: ${timeElapsed} s.`}
+          <div className="endGameText">
+            {`Twój czas to:`}
+            <br />
+            {`${timeElapsed} s.`}
             <br />
             {"Gratulacje! Wygrałeś!"}
-          </>
+          </div>
         );
+        
       } else {
         setMessage(
-          <>
-            {`Twój czas to: ${timeElapsed} s.`}
+          <div className="endGameText">
+          {`Twój czas to:`}
+          <br />
+          {`${timeElapsed} s.`}
             <br />
             <br />
             {"Niestety, musisz spróbować jeszcze raz."}
@@ -110,14 +116,14 @@ const Game = ({ resetGame }) => {
             <br />
             <br />
             <button
-              onClick={() => window.location.reload()} // Zmieniono z handleCoffeeReject na odświeżenie
-              style={{ marginTop: "50px" }}
+              onClick={() => window.location.reload()}
               className="no2"
             >
               {"Spróbuj ponownie"}
             </button>
-          </>
+          </div>
         );
+        
         // Usunięto setTimeout, ponieważ strona będzie odświeżona od razu po kliknięciu "Spróbuj ponownie"
       }
     } else {
@@ -218,7 +224,8 @@ const Game = ({ resetGame }) => {
     const keys5 = ["___________________"];
 
     return (
-      <div className="virtual-keyboard">
+      <div className="virtual-keyboard" 
+      style={{display: "none"}}>
         <div>
           {keys.map((key) => (
             <button
@@ -356,6 +363,7 @@ const Game = ({ resetGame }) => {
                       borderRadius: "1rem",
                       width: "700px",
                       height: "5rem",
+                      display: "none"
                     }}
                   />
                   <div>
@@ -367,12 +375,12 @@ const Game = ({ resetGame }) => {
               )}
               <button
                 onClick={handleCoffeeClaim}
-                style={{ marginTop: "50px", fontSize: "2rem" }}
+                className="getButton"
               >
-                ODBIERZ KAWĘ (KOD QR)
+                ODBIERZ WYDRUK
               </button>
               <br />
-              <button onClick={handleCoffeeReject} className="no2">
+              <button onClick={handleCoffeeReject} className="no2" style={{display: "none"}}>
                 <a className="a">Nie chcę kawy</a>
               </button>
 
@@ -380,6 +388,7 @@ const Game = ({ resetGame }) => {
                 <button
                   onClick={fetchScoresFromFirebase}
                   className="tabletable"
+                  style={{display: "none"}}
                 >
                   {"Tabela Wyników"}
                 </button>

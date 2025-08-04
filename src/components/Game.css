@@ -1,3 +1,5 @@
+
+
 body {
   margin: 0;
   overflow: hidden; /* Zapobiega przewijaniu, jeśli elementy wyjdą poza widoczny obszar */
@@ -13,21 +15,23 @@ body {
   background-color: rgb(0, 0, 0);
   width: 100vw;
   position: relative; /* Ważne dla pozycjonowania timer i score */
+  background-image: url("../assets/images/bg.png"); /* ścieżka względem Game.css */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .game-area {
   position: absolute; /* Pozycjonujemy absolutnie względem .game-container */
   width: 900px; /* GAME_AREA_WIDTH */
   height: 1500px; /* GAME_AREA_HEIGHT */
-  border: 5px solid red; /* Czerwona ramka dla obszaru gry */
-  background-color: transparent; /* Brak wypełnienia obszaru gry */
+  border: 5px solid transparent;
+  background-color: transparent;
 
-  /* Ustawienie pozycji obszaru gry */
-  left: 100px; /* GAME_AREA_OFFSET_X */
-  top: 200px; /* GAME_AREA_OFFSET_Y */
+  left: 100px;
+  top: 200px;
 }
 
-/* Usunięcie stylów dla .grid i .square, ponieważ nie będziemy ich używać */
 .grid,
 .square {
   display: none;
@@ -35,15 +39,16 @@ body {
 
 
 .red-image-wrapper {
-  position: absolute; /* Pozycjonowany absolutnie wewnątrz .game-area */
-  width: 200px; /* Szerokość obrazka */
-  height: 200px; /* Wysokość obrazka */
+  position: absolute;
+  width: 200px;
+  height: 200px;
   z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
 
   transition: transform 0.03s ease-in-out;
+  
 }
 
 .red-image {
@@ -98,12 +103,18 @@ button {
   margin: 10px 2px;
   cursor: pointer;
   border-radius: 5px;
+  width: 500px;
+  height: 100px; 
 }
 
 .no2 {
   background-color: rgb(106, 0, 0);
   font-size: 2rem;
-  margin-right: 100px;
+  margin-right: 10px;
+  box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+-webkit-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+-moz-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+border-radius: 20px;
 }
 
 .results-table {
@@ -183,4 +194,25 @@ td {
   width: 1000px;
   display: flex;
   justify-content: center;
+}
+
+
+.endGameText {
+  font-size: 4rem;
+  text-align: center;
+  color: #fff;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+
+.getButton {
+  margin-top: 50px;
+  font-size: 2rem;
+  box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+  -webkit-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+  -moz-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+  border-radius: 20px;
 }

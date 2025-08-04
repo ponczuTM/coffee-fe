@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./StartScreen.css";
+import bg from "../assets/images/bg.png"
 
 const StartScreen = ({ startGame }) => {
   const [startAnimation, setStartAnimation] = useState(false);
@@ -13,13 +14,12 @@ const StartScreen = ({ startGame }) => {
 
   return (
     <div
-      className={`start-screen ${startAnimation ? "slide-down" : ""}`}
-      onClick={handleClick}
-    >
-      <video className="background-video" autoPlay loop muted>
-        <source src="src/assets/bg.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+        className={`start-screen ${startAnimation ? "slide-down" : ""}`}
+        onClick={handleClick}
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+
+
       <div className="start-text">
         <div style={{ marginTop: "0px" }} className="text">Hej!</div>
         <div style={{ marginTop: "10px" }}>Chcesz</div>

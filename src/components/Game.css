@@ -23,9 +23,9 @@ body {
 
 .game-area {
   position: absolute; /* Pozycjonujemy absolutnie względem .game-container */
-  width: 900px; /* GAME_AREA_WIDTH */
-  height: 1500px; /* GAME_AREA_HEIGHT */
-  border: 5px solid transparent;
+  width: 550px; /* GAME_AREA_WIDTH */
+  height: 900px; /* GAME_AREA_HEIGHT */
+  border: 5px solid red;
   background-color: transparent;
 
   left: 100px;
@@ -112,9 +112,9 @@ button {
   font-size: 2rem;
   margin-right: 10px;
   box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
--webkit-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
--moz-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
-border-radius: 20px;
+  -webkit-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+  -moz-box-shadow: 7px 10px 5px 0px rgba(0,0,0,0.63);
+  border-radius: 20px;
 }
 
 .results-table {
@@ -159,7 +159,7 @@ td {
 }
 
 .gameText {
-  font-size: 4rem;
+  font-size: 3.5rem;
 }
 
 .close {

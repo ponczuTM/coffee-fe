@@ -10,7 +10,7 @@ const GAME_AREA_HEIGHT = 900; // Wysokość obszaru (np. 1200 - 200)
 const GAME_AREA_OFFSET_X = 100; // Współrzędna X lewego górnego rogu
 const GAME_AREA_OFFSET_Y = 200; // Współrzędna Y lewego górnego rogu
 
-const SCORE_NEEDED = 10;
+const SCORE_NEEDED = 1;
 const IMAGE_SIZE_PX = 200; // Przyjmujemy rozmiar obrazka z CSS
 const MIN_DISTANCE = 200; // Minimalna odległość od poprzedniej pozycji
 
